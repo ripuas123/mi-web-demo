@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aventuras de Papel</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300;1,600;1,700&family=Outfit:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#12100e;
+  --cream:#fdf8f2;
+  --warm:#f5ead8;
+  --gold:#b8832a;
+  --gold2:#e6a93c;
+  --rust:#c4532a;
+  --sage:#4a7c5f;
+  --plum:#4a2d5e;
+  --mist:#e8e2d9;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden;cursor:none}
+
+/* CURSOR */
+#cur{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:multiply;transition:transform .15s,width .3s,height .3s}
+#ring{position:fixed;width:32px;height:32px;border:1px solid var(--gold);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.5;transition:width .3s,height .3s}
+
+/* HERO */
+.hero{min-height:100vh;background:var(--ink);display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:80px 60px 80px 80px;position:relative;z-index:2}
+.hero-right{position:relative;overflow:hidden}
+.hero-right-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 60% 40%,rgba(184,131,42,.18) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 70% at 30% 70%,rgba(196,83,42,.1) 0%,transparent 60%);
+}
+.hero-glyph{
+  position:absolute;
+  font-family:'Cormorant Garamond',serif;
+  font-size:380px;
+  font-weight:700;
+  color:rgba(253,248,242,.03);
+  line-height:1;
+  right:-40px;top:50%;
+  transform:translateY(-50%);
+  letter-spacing:-20px;
+  user-select:none;
+}
+.hero-books{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.book-visual{
+  position:relative;
+  width:300px;height:380px;
+}
+.bv{
+  position:absolute;
+  border-radius:4px 8px 8px 4px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:12px;padding:24px;
+  box-shadow:20px 20px 60px rgba(0,0,0,.6);
+}
+.bv1{width:220px;height:290px;background:linear-gradient(135deg,#2a1f0e,#3d2b1a);top:0;left:0;transform:rotate(-6deg);z-index:1;border-left:4px solid var(--gold)}
+.bv2{width:210px;height:280px;background:linear-gradient(135deg,#1a1035,#2d1f50);top:30px;left:50px;transform:rotate(3deg);z-index:2;border-left:4px solid #9b6fd4}
+.bv3{width:215px;height:285px;background:linear-gradient(135deg,#0d2218,#1a3d28);top:60px;left:20px;transform:rotate(-1deg);z-index:3;border-left:4px solid var(--sage)}
+.bv-emoji{font-size:44px}
+.bv-title{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;text-align:center;line-height:1.4;color:rgba(253,248,242,.8)}
+.bv-line{width:30px;height:1px;background:rgba(253,248,242,.2)}
+
+.hero-tag{
+  font-size:11px;font-weight:500;letter-spacing:5px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:32px;
+  display:flex;align-items:center;gap:14px;
+  animation:fadeUp .8s .1s both;
+}
+.hero-tag::before{content:'';width:32px;height:1px;background:var(--gold)}
+.hero-h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(56px,7vw,96px);
+  font-weight:300;
+  color:var(--cream);
+  line-height:1;
+  letter-spacing:-1px;
+  animation:fadeUp .8s .3s both;
+}
+.hero-h1 em{
+  font-style:italic;font-weight:600;
+  color:var(--gold2);
+  display:block;
+}
+.hero-sub{
+  margin-top:28px;font-size:16px;font-weight:300;
+  color:rgba(253,248,242,.5);line-height:1.8;
+  max-width:380px;
+  animation:fadeUp .8s .5s both;
+}
+.hero-actions{
+  margin-top:52px;display:flex;gap:16px;flex-wrap:wrap;
+  animation:fadeUp .8s .7s both;
+}
+.btn-main{
+  background:var(--gold);color:var(--ink);
+  font-family:'Outfit',sans-serif;font-weight:600;font-size:12px;
+  letter-spacing:2px;text-transform:uppercase;
+  padding:16px 36px;border:none;border-radius:0;
+  text-decoration:none;display:inline-block;
+  transition:background .3s,transform .2s;cursor:pointer;
+}
+.btn-main:hover{background:var(--gold2);transform:translateY(-2px)}
+.btn-outline{
+  background:transparent;color:rgba(253,248,242,.5);
+  font-family:'Outfit',sans-serif;font-weight:400;font-size:13px;
+  letter-spacing:1px;border:none;
+  text-decoration:none;display:inline-flex;
+  align-items:center;gap:8px;
+  transition:color .3s;padding:16px 0;cursor:pointer;
+}
+.btn-outline:hover{color:var(--cream)}
+.scroll-cue{
+  position:absolute;bottom:40px;left:80px;
+  display:flex;flex-direction:column;gap:8px;align-items:flex-start;
+  animation:fadeUp .8s 1s both;
+}
+.scroll-cue span{font-size:9px;letter-spacing:4px;color:rgba(253,248,242,.2);text-transform:uppercase}
+.scroll-bar{width:1px;height:52px;background:linear-gradient(180deg,var(--gold),transparent);animation:scrollPulse 2s ease-in-out infinite}
+@keyframes scrollPulse{0%,100%{opacity:.3;transform:scaleY(1)}50%{opacity:1}}
+
+/* MARQUEE */
+.marquee-wrap{background:var(--gold);padding:16px 0;overflow:hidden}
+.marquee-track{display:flex;gap:0;white-space:nowrap;animation:marquee 22s linear infinite}
+.marquee-item{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-style:italic;font-weight:600;
+  color:var(--ink);padding:0 32px;
+  display:flex;align-items:center;gap:16px;
+}
+.marquee-dot{width:5px;height:5px;background:var(--ink);border-radius:50%;opacity:.4;flex-shrink:0}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SECTIONS BASE */
+.sec{max-width:1160px;margin:0 auto;padding:120px 60px}
+.sec-label{font-size:10px;font-weight:500;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:14px}
+.sec-label::before{content:'';width:32px;height:1px;background:var(--gold)}
+.sec-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(44px,5.5vw,72px);font-weight:300;line-height:1.05;color:var(--ink)}
+.sec-h2 em{font-style:italic;font-weight:600;color:var(--gold)}
+
+/* QUÉ HACEMOS */
+.what{background:var(--cream)}
+.what-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:100px;align-items:center;margin-top:70px}
+.what-copy .lead{font-size:19px;font-weight:300;line-height:1.8;color:#5a4a3a;margin-top:28px;margin-bottom:40px}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{
+  border:1px solid rgba(184,131,42,.3);color:var(--gold);
+  font-size:12px;font-weight:500;letter-spacing:.5px;
+  padding:7px 16px;border-radius:0;
+  display:flex;align-items:center;gap:6px;
+  background:rgba(184,131,42,.05);
+}
+.what-visual-wrap{position:relative}
+.big-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:220px;font-weight:700;
+  color:rgba(184,131,42,.07);
+  position:absolute;top:-40px;right:-20px;
+  line-height:1;user-select:none;
+  pointer-events:none;
+}
+.pages-preview{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:12px;position:relative;z-index:1;
+}
+.page-thumb{
+  border-radius:2px;overflow:hidden;
+  aspect-ratio:3/4;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:10px;padding:20px;
+  position:relative;
+  transition:transform .35s;cursor:default;
+}
+.page-thumb:hover{transform:scale(1.03) rotate(0deg) !important}
+.pt1{background:linear-gradient(145deg,#2a1f0e,#1a0e05);transform:rotate(-1.5deg)}
+.pt2{background:linear-gradient(145deg,#1a1035,#0d0820);transform:rotate(1deg)}
+.pt3{background:linear-gradient(145deg,#0d2218,#060f0b);transform:rotate(-0.5deg);grid-column:span 2;aspect-ratio:2/1;flex-direction:row;gap:24px;padding:28px 32px;text-align:left}
+.pt-emoji{font-size:36px}
+.pt-name{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:rgba(253,248,242,.7);line-height:1.4;text-align:center}
+.pt3 .pt-name{text-align:left;font-size:14px}
+.pt-bar{width:24px;height:2px}
+.pt1 .pt-bar{background:var(--gold)}
+.pt2 .pt-bar{background:#9b6fd4}
+.pt3 .pt-bar{background:var(--sage);width:32px}
+
+/* PROCESS */
+.process-bg{background:var(--ink)}
+.process-inner{max-width:1160px;margin:0 auto;padding:120px 60px}
+.process-inner .sec-label{color:var(--gold)}
+.process-inner .sec-label::before{background:var(--gold)}
+.process-inner .sec-h2{color:var(--cream)}
+.process-inner .sec-h2 em{color:var(--gold2)}
+
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:80px;background:rgba(253,248,242,.05)}
+.step{
+  background:var(--ink);padding:48px 36px;
+  position:relative;overflow:hidden;
+  transition:background .4s;
+  border-top:1px solid rgba(253,248,242,.04);
+}
+.step:hover{background:#1c170f}
+.step::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .5s;
+}
+.step:nth-child(1)::after{background:var(--gold)}
+.step:nth-child(2)::after{background:var(--rust)}
+.step:nth-child(3)::after{background:var(--sage)}
+.step:nth-child(4)::after{background:#9b6fd4}
+.step:hover::after{transform:scaleX(1)}
+.step-n{
+  font-family:'Cormorant Garamond',serif;
+  font-size:96px;font-weight:700;
+  color:rgba(253,248,242,.04);
+  line-height:1;margin-bottom:24px;
+  letter-spacing:-4px;
+}
+.step-icon{font-size:28px;margin-bottom:18px;display:block}
+.step-h{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-style:italic;
+  color:var(--cream);margin-bottom:12px;
+}
+.step-p{font-size:13px;line-height:1.75;color:rgba(253,248,242,.4);font-weight:300}
+.step-tag{
+  margin-top:24px;display:inline-block;
+  font-size:9px;letter-spacing:2.5px;text-transform:uppercase;
+  color:rgba(253,248,242,.3);
+  padding:5px 12px;border:1px solid rgba(253,248,242,.1);
+}
+
+/* INCLUDES */
+.inc-bg{background:var(--warm)}
+.inc-inner{max-width:1160px;margin:0 auto;padding:120px 60px}
+.inc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:70px;background:rgba(184,131,42,.12)}
+.inc-card{
+  background:var(--warm);padding:48px 36px;
+  position:relative;overflow:hidden;
+  transition:background .3s,transform .3s;
+}
+.inc-card:hover{background:var(--cream);transform:translateY(-4px)}
+.inc-accent{
+  position:absolute;top:0;left:0;
+  width:3px;height:100%;
+}
+.inc-card:nth-child(1) .inc-accent{background:var(--gold)}
+.inc-card:nth-child(2) .inc-accent{background:var(--rust)}
+.inc-card:nth-child(3) .inc-accent{background:var(--sage)}
+.inc-card:nth-child(4) .inc-accent{background:var(--plum)}
+.inc-card:nth-child(5) .inc-accent{background:var(--gold2)}
+.inc-card:nth-child(6) .inc-accent{background:var(--rust)}
+.inc-icon{font-size:32px;margin-bottom:20px;display:block}
+.inc-h{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--ink);margin-bottom:10px}
+.inc-p{font-size:13px;line-height:1.75;color:#6b5540;font-weight:300}
+
+/* PRICING */
+.price-bg{background:var(--cream)}
+.price-inner{max-width:1160px;margin:0 auto;padding:120px 60px}
+
+/* Individual book — editorial horizontal */
+.solo-card{
+  display:grid;grid-template-columns:auto 1fr auto;
+  align-items:center;gap:60px;
+  border:1px solid rgba(184,131,42,.2);
+  padding:52px 60px;
+  margin-top:64px;
+  background:var(--warm);
+  position:relative;overflow:hidden;
+  transition:transform .3s;
+}
+.solo-card::before{
+  content:'LIBRO INDIVIDUAL';
+  position:absolute;top:0;left:0;right:0;
+  background:rgba(184,131,42,.08);
+  padding:8px 60px;
+  font-size:9px;letter-spacing:4px;color:var(--gold);font-weight:500;
+}
+.solo-card:hover{transform:translateY(-4px)}
+.solo-price{
+  font-family:'Cormorant Garamond',serif;
+  font-size:100px;font-weight:300;
+  color:var(--ink);line-height:1;
+  letter-spacing:-4px;
+}
+.solo-price sup{font-size:32px;vertical-align:super;letter-spacing:0;font-weight:600}
+.solo-feats{
+  padding-top:12px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px 24px;
+}
+.solo-feat{
+  font-size:13px;color:#5a4a3a;font-weight:400;
+  display:flex;align-items:center;gap:8px;
+}
+.solo-feat::before{content:'';width:14px;height:14px;border-radius:50%;background:rgba(184,131,42,.15);border:1px solid rgba(184,131,42,.3);flex-shrink:0}
+.solo-cta{display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.solo-note{font-size:11px;color:#9a8a7a;letter-spacing:.5px;text-align:right}
+
+/* Paquetes */
+.packs-label{
+  margin-top:72px;margin-bottom:20px;
+  font-size:10px;letter-spacing:5px;color:rgba(18,16,14,.35);
+  text-transform:uppercase;font-weight:500;
+  display:flex;align-items:center;gap:16px;
+}
+.packs-label::after{content:'';flex:1;height:1px;background:rgba(18,16,14,.1)}
+
+.packs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.pack{
+  border-radius:0;padding:44px 32px;
+  position:relative;overflow:hidden;
+  transition:transform .3s,box-shadow .3s;
+}
+.pack:hover{transform:translateY(-8px);box-shadow:0 32px 72px rgba(0,0,0,.15)}
+.pack.p1{background:var(--warm);border:1px solid rgba(184,131,42,.15)}
+.pack.p2{background:#2a1f0e;border:1px solid rgba(184,131,42,.2)}
+.pack.p3{background:var(--ink);border:1px solid rgba(184,131,42,.25)}
+.pack.p4{background:linear-gradient(145deg,#1a0f05,#2d1a08);border:1px solid rgba(230,169,60,.4)}
+
+.pack-badge{
+  position:absolute;top:0;left:0;right:0;
+  padding:8px 20px;
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;font-weight:600;
+  text-align:center;
+}
+.p1 .pack-badge{background:rgba(184,131,42,.1);color:var(--gold)}
+.p2 .pack-badge{background:rgba(184,131,42,.15);color:var(--gold2)}
+.p3 .pack-badge{background:rgba(184,131,42,.2);color:var(--gold2)}
+.p4 .pack-badge{background:linear-gradient(90deg,var(--gold),var(--gold2));color:var(--ink);font-size:10px}
+
+.pack-label{
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  margin-top:36px;margin-bottom:12px;font-weight:500;
+}
+.p1 .pack-label{color:var(--gold)}
+.p2 .pack-label,.p3 .pack-label,.p4 .pack-label{color:var(--gold2)}
+
+.pack-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px;font-weight:600;margin-bottom:6px;
+}
+.p1 .pack-name{color:var(--ink)}
+.p2 .pack-name,.p3 .pack-name,.p4 .pack-name{color:var(--cream)}
+
+.pack-price{
+  font-family:'Cormorant Garamond',serif;
+  font-size:72px;font-weight:300;line-height:1;
+  letter-spacing:-3px;margin:20px 0 6px;
+}
+.p1 .pack-price{color:var(--ink)}
+.p2 .pack-price,.p3 .pack-price,.p4 .pack-price{color:var(--gold2)}
+.pack-price sup{font-size:24px;vertical-align:super;letter-spacing:0}
+
+.pack-per{
+  font-size:11px;font-weight:300;margin-bottom:28px;opacity:.45;
+}
+.p1 .pack-per{color:var(--ink)}
+.p2 .pack-per,.p3 .pack-per,.p4 .pack-per{color:var(--cream)}
+
+.pack-div{height:1px;margin-bottom:24px}
+.p1 .pack-div{background:rgba(18,16,14,.08)}
+.p2 .pack-div,.p3 .pack-div,.p4 .pack-div{background:rgba(253,248,242,.08)}
+
+.pack-feats{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+.pack-feats li{font-size:12.5px;font-weight:400;display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.p1 .pack-feats li{color:#5a4a3a}
+.p2 .pack-feats li,.p3 .pack-feats li,.p4 .pack-feats li{color:rgba(253,248,242,.6)}
+.chk{width:15px;height:15px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;margin-top:2px}
+.p1 .chk{background:rgba(184,131,42,.12);color:var(--gold)}
+.p2 .chk{background:rgba(253,248,242,.08);color:var(--gold2)}
+.p3 .chk{background:rgba(184,131,42,.15);color:var(--gold2)}
+.p4 .chk{background:rgba(230,169,60,.2);color:var(--gold2)}
+
+.pack-btn{
+  display:block;width:100%;text-align:center;
+  padding:14px 20px;font-size:11px;font-weight:500;
+  letter-spacing:2px;text-transform:uppercase;
+  text-decoration:none;border:none;cursor:pointer;
+  transition:all .3s;
+}
+.p1 .pack-btn{background:var(--ink);color:var(--cream)}
+.p1 .pack-btn:hover{background:var(--gold);color:var(--ink)}
+.p2 .pack-btn{background:rgba(253,248,242,.08);color:var(--cream);border:1px solid rgba(253,248,242,.15)}
+.p2 .pack-btn:hover{background:var(--gold);color:var(--ink);border-color:transparent}
+.p3 .pack-btn{background:var(--gold);color:var(--ink)}
+.p3 .pack-btn:hover{background:var(--gold2)}
+.p4 .pack-btn{background:linear-gradient(90deg,var(--gold),var(--gold2));color:var(--ink);font-weight:700}
+.p4 .pack-btn:hover{opacity:.88}
+
+.guarantee{
+  margin-top:28px;
+  display:flex;align-items:center;gap:20px;
+  border:1px solid rgba(184,131,42,.15);
+  padding:24px 32px;
+  background:var(--warm);
+}
+.guarantee-icon{font-size:32px;flex-shrink:0}
+.guarantee h4{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.guarantee p{font-size:13px;color:#6b5540;font-weight:300;line-height:1.6}
+
+/* QUOTE */
+.quote-bg{
+  background:var(--ink);
+  padding:120px 60px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.quote-bg::before{
+  content:'"';
+  position:absolute;
+  font-family:'Cormorant Garamond',serif;
+  font-size:500px;font-weight:700;font-style:italic;
+  color:rgba(184,131,42,.06);
+  top:-80px;left:50%;transform:translateX(-50%);
+  line-height:1;pointer-events:none;user-select:none;
+}
+.quote-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(24px,3.5vw,42px);
+  font-style:italic;font-weight:300;
+  color:var(--cream);
+  max-width:800px;margin:0 auto 40px;
+  line-height:1.5;
+  position:relative;z-index:1;
+}
+.quote-author{
+  font-size:11px;letter-spacing:4px;text-transform:uppercase;
+  color:rgba(253,248,242,.3);font-weight:500;
+}
+.quote-stars{margin-bottom:28px;font-size:18px;letter-spacing:6px}
+
+/* CTA */
+.cta-bg{
+  background:var(--gold);
+  position:relative;overflow:hidden;
+  padding:140px 60px;text-align:center;
+}
+.cta-bg::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 80% at 20% 50%,rgba(18,16,14,.08) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 60% at 80% 30%,rgba(18,16,14,.06) 0%,transparent 60%);
+}
+.cta-inner{position:relative;z-index:1}
+.cta-tag{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:rgba(18,16,14,.5);margin-bottom:24px;font-weight:500}
+.cta-h{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(52px,8vw,110px);
+  font-weight:700;font-style:italic;
+  color:var(--ink);line-height:.9;
+  margin-bottom:36px;
+}
+.cta-sub{font-size:17px;font-weight:300;color:rgba(18,16,14,.6);margin-bottom:56px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.7}
+.cta-btns{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap}
+.btn-wa{
+  background:var(--ink);color:var(--cream);
+  font-family:'Outfit',sans-serif;font-weight:600;font-size:13px;
+  letter-spacing:1.5px;text-transform:uppercase;
+  padding:18px 44px;border:none;cursor:pointer;
+  text-decoration:none;display:flex;align-items:center;gap:10px;
+  transition:all .3s;
+}
+.btn-wa:hover{background:#1c170f;transform:translateY(-3px)}
+.cta-note{font-size:12px;color:rgba(18,16,14,.4);letter-spacing:1px}
+
+/* FOOTER */
+footer{background:#0d0a07;padding:44px 60px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(253,248,242,.04)}
+.foot-brand{font-family:'Cormorant Garamond',serif;font-size:24px;font-style:italic;font-weight:600;color:var(--gold)}
+.foot-right{font-size:11px;letter-spacing:2px;color:rgba(253,248,242,.2);text-transform:uppercase}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(36px);transition:opacity .85s ease,transform .85s ease}
+.rv.in{opacity:1;transform:none}
+.rv-s>*{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease}
+.rv-s.in>*:nth-child(1){opacity:1;transform:none;transition-delay:0s}
+.rv-s.in>*:nth-child(2){opacity:1;transform:none;transition-delay:.1s}
+.rv-s.in>*:nth-child(3){opacity:1;transform:none;transition-delay:.2s}
+.rv-s.in>*:nth-child(4){opacity:1;transform:none;transition-delay:.3s}
+.rv-s.in>*:nth-child(5){opacity:1;transform:none;transition-delay:.4s}
+.rv-s.in>*:nth-child(6){opacity:1;transform:none;transition-delay:.5s}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .hero-right{display:none}
+  .hero-left{padding:80px 40px}
+  .what-grid,.steps,.inc-grid,.packs-grid{grid-template-columns:1fr 1fr}
+  .solo-card{grid-template-columns:1fr;gap:24px}
+  .solo-cta{align-items:flex-start}
+  .pt3{grid-column:span 1;aspect-ratio:3/4;flex-direction:column;text-align:center}
+  .pt3 .pt-name{text-align:center}
+}
+@media(max-width:620px){
+  .sec{padding:80px 28px}
+  .what-grid,.packs-grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .inc-grid{grid-template-columns:1fr}
+  .pages-preview{grid-template-columns:1fr 1fr}
+  .solo-feats{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:16px;text-align:center}
+}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div id="ring"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <p class="hero-tag">Aventuras de Papel</p>
+    <h1 class="hero-h1">Tu hijo,<br><em>el héroe.</em></h1>
+    <p class="hero-sub">Libros ilustrados 100% personalizados. La historia de tu pequeño, con su nombre, sus rasgos y su aventura favorita.</p>
+    <div class="hero-actions">
+      <a href="#proceso" class="btn-main">Cómo funciona</a>
+      <a href="#precio" class="btn-outline">Ver precios →</a>
+    </div>
+    <div class="scroll-cue">
+      <span>Scroll</span>
+      <div class="scroll-bar"></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-right-bg"></div>
+    <div class="hero-glyph">✦</div>
+    <div class="hero-books">
+      <div class="book-visual">
+        <div class="bv bv1">
+          <span class="bv-emoji">🦕</span>
+          <div class="bv-line"></div>
+          <span class="bv-title">Santiago y el Volcán de la Valentía</span>
+        </div>
+        <div class="bv bv2">
+          <span class="bv-emoji">👸</span>
+          <div class="bv-line"></div>
+          <span class="bv-title">Eileen y la Corona de Estrellas</span>
+        </div>
+        <div class="bv bv3">
+          <span class="bv-emoji">⚡</span>
+          <div class="bv-line"></div>
+          <span class="bv-title">Arthur y el Portal de los Bloques</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item"><span class="marquee-dot"></span>Libros personalizados</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Tu hijo, el protagonista</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Ilustraciones estilo Pixar</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Entrega en 24 horas</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Aventuras de Papel</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Libros personalizados</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Tu hijo, el protagonista</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Ilustraciones estilo Pixar</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Entrega en 24 horas</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Aventuras de Papel</span>
+  </div>
+</div>
+
+<!-- QUÉ HACEMOS -->
+<div class="what">
+<div class="sec">
+  <div class="what-grid">
+    <div class="what-copy rv">
+      <p class="sec-label">¿Qué hacemos?</p>
+      <h2 class="sec-h2">Cuentos que<br><em>nombran</em> a tu hijo</h2>
+      <p class="lead">Creamos libros ilustrados únicos donde tu hijo es el protagonista — con su nombre, sus gustos, su personalidad y un mensaje lleno de amor que se queda para siempre.</p>
+      <div class="pills">
+        <span class="pill">📖 7 páginas por libro</span>
+        <span class="pill">🎨 Ilustraciones Pixar 3D</span>
+        <span class="pill">✍️ Historia única</span>
+        <span class="pill">📱 Formato digital PDF</span>
+        <span class="pill">⚡ Entrega en 24 hrs</span>
+        <span class="pill">❤️ Hecho con amor</span>
+      </div>
+    </div>
+    <div class="what-visual-wrap rv">
+      <div class="big-num">7</div>
+      <div class="pages-preview">
+        <div class="page-thumb pt1">
+          <span class="pt-emoji">🦕</span>
+          <div class="pt-bar"></div>
+          <span class="pt-name">Portada personalizada</span>
+        </div>
+        <div class="page-thumb pt2">
+          <span class="pt-emoji">🌟</span>
+          <div class="pt-bar"></div>
+          <span class="pt-name">La aventura comienza</span>
+        </div>
+        <div class="page-thumb pt3">
+          <span class="pt-emoji">🏆</span>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="pt-bar"></div>
+            <span class="pt-name">El final mágico con el apodo especial de tu hijo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PROCESO -->
+<div class="process-bg" id="proceso">
+<div class="process-inner">
+  <p class="sec-label rv">El proceso</p>
+  <h2 class="sec-h2 rv">De tus datos<br>a su <em>aventura</em></h2>
+  <div class="steps rv-s">
+    <div class="step">
+      <div class="step-n">01</div>
+      <span class="step-icon">💬</span>
+      <h3 class="step-h">Nos cuentas sobre tu hijo</h3>
+      <p class="step-p">Nombre, edad, rasgos físicos, sus gustos y el valor que quieres que aprenda. Solo 5 minutos.</p>
+      <span class="step-tag">5 minutos</span>
+    </div>
+    <div class="step">
+      <div class="step-n">02</div>
+      <span class="step-icon">✍️</span>
+      <h3 class="step-h">Escribimos su historia</h3>
+      <p class="step-p">Un cuento literario único, no genérico. Tu hijo vive una aventura mágica hecha exactamente para él.</p>
+      <span class="step-tag">IA + revisión humana</span>
+    </div>
+    <div class="step">
+      <div class="step-n">03</div>
+      <span class="step-icon">🎨</span>
+      <h3 class="step-h">Ilustramos en 3D Pixar</h3>
+      <p class="step-p">Generamos ilustraciones cinematográficas con los rasgos físicos exactos de tu pequeño.</p>
+      <span class="step-tag">Estilo Disney / Pixar</span>
+    </div>
+    <div class="step">
+      <div class="step-n">04</div>
+      <span class="step-icon">📩</span>
+      <h3 class="step-h">Recibes tu libro digital</h3>
+      <p class="step-p">PDF completo directo a tu WhatsApp en menos de 24 horas. Listo para leer, compartir o imprimir.</p>
+      <span class="step-tag">Menos de 24 hrs</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- INCLUYE -->
+<div class="inc-bg">
+<div class="inc-inner">
+  <p class="sec-label rv">¿Qué incluye?</p>
+  <h2 class="sec-h2 rv">Todo lo que<br>necesita <em>la magia</em></h2>
+  <div class="inc-grid rv-s">
+    <div class="inc-card"><div class="inc-accent"></div>
+      <span class="inc-icon">📖</span>
+      <h3 class="inc-h">Historia personalizada</h3>
+      <p class="inc-p">7 páginas escritas exclusivamente para tu hijo, con su nombre al menos 5 veces, sus gustos y un valor central.</p>
+    </div>
+    <div class="inc-card"><div class="inc-accent"></div>
+      <span class="inc-icon">🎨</span>
+      <h3 class="inc-h">Ilustraciones Pixar</h3>
+      <p class="inc-p">Imágenes 3D cinematográficas con los rasgos físicos de tu hijo: cabello, ojos, complexión y expresión.</p>
+    </div>
+    <div class="inc-card"><div class="inc-accent"></div>
+      <span class="inc-icon">💎</span>
+      <h3 class="inc-h">Apodo mágico único</h3>
+      <p class="inc-p">Cada libro termina con un apodo especial: "La niña que ilumina el mundo" o "El niño que nunca se rinde."</p>
+    </div>
+    <div class="inc-card"><div class="inc-accent"></div>
+      <span class="inc-icon">📱</span>
+      <h3 class="inc-h">PDF listo para usar</h3>
+      <p class="inc-p">Alta calidad. Léelo en tablet, celular o computadora, o imprímelo en casa cuantas veces quieras.</p>
+    </div>
+    <div class="inc-card"><div class="inc-accent"></div>
+      <span class="inc-icon">⚡</span>
+      <h3 class="inc-h">Entrega en 24 horas</h3>
+      <p class="inc-p">Directo a tu WhatsApp en menos de 24 horas desde que nos mandas los datos de tu pequeño.</p>
+    </div>
+    <div class="inc-card"><div class="inc-accent"></div>
+      <span class="inc-icon">♾️</span>
+      <h3 class="inc-h">Tuyo para siempre</h3>
+      <p class="inc-p">Compártelo con la familia, mándalo a los abuelos o imprímelo. Sin caducidad, sin restricciones.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PRECIOS -->
+<div class="price-bg" id="precio">
+<div class="price-inner">
+  <p class="sec-label rv">Inversión</p>
+  <h2 class="sec-h2 rv">Un precio justo para<br>un <em>recuerdo eterno</em></h2>
+
+  <!-- Individual -->
+  <div class="solo-card rv">
+    <div>
+      <div style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-weight:500">Comienza aquí</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--ink)">Libro Individual</div>
+    </div>
+    <div class="solo-feats">
+      <span class="solo-feat">1 libro de 7 páginas</span>
+      <span class="solo-feat">Historia 100% personalizada</span>
+      <span class="solo-feat">Ilustraciones estilo Pixar</span>
+      <span class="solo-feat">Apodo mágico único</span>
+      <span class="solo-feat">PDF en alta calidad</span>
+      <span class="solo-feat">Entrega en 24 hrs</span>
+    </div>
+    <div class="solo-cta">
+      <div class="solo-price"><sup>$</sup>100</div>
+      <a href="#contacto" class="btn-main" style="white-space:nowrap">Quiero mi libro</a>
+      <span class="solo-note">pago único · digital</span>
+    </div>
+  </div>
+
+  <!-- Paquetes -->
+  <div class="packs-label">Paquetes — mayor valor</div>
+  <div class="packs-grid rv-s">
+
+    <!-- Pack Esencial -->
+    <div class="pack p1">
+      <div class="pack-badge">✦ Más popular</div>
+      <div class="pack-label">5 libros</div>
+      <div class="pack-name">Pack Esencial</div>
+      <div class="pack-price"><sup>$</sup>199</div>
+      <div class="pack-per">pago único · entrega 24–48 hrs</div>
+      <div class="pack-div"></div>
+      <ul class="pack-feats">
+        <li><span class="chk">✓</span>5 libros personalizados</li>
+        <li><span class="chk">✓</span>35 páginas de aventuras</li>
+        <li><span class="chk">✓</span>Ilustraciones Pixar</li>
+        <li><span class="chk">✓</span>Serie de valores progresivos</li>
+        <li><span class="chk">✓</span>PDF consolidado</li>
+        <li><span class="chk">✓</span>Entrega en 24–48 hrs</li>
+      </ul>
+      <a href="#contacto" class="pack-btn">Elegir</a>
+    </div>
+
+    <!-- Pack Plus -->
+    <div class="pack p2">
+      <div class="pack-badge">✦ Más completo</div>
+      <div class="pack-label">5 libros + extras</div>
+      <div class="pack-name">Pack Plus</div>
+      <div class="pack-price"><sup>$</sup>349</div>
+      <div class="pack-per">pago único · prioridad</div>
+      <div class="pack-div"></div>
+      <ul class="pack-feats">
+        <li><span class="chk">✓</span>Todo del Pack Esencial</li>
+        <li><span class="chk">✓</span>Portada premium exclusiva</li>
+        <li><span class="chk">✓</span>Dedicatoria personalizada</li>
+        <li><span class="chk">✓</span>Versión en inglés incluida</li>
+        <li><span class="chk">✓</span>Ajustes sin costo extra</li>
+        <li><span class="chk">✓</span>Entrega prioritaria 12 hrs</li>
+      </ul>
+      <a href="#contacto" class="pack-btn">Elegir</a>
+    </div>
+
+    <!-- Pack Familia -->
+    <div class="pack p3">
+      <div class="pack-badge">⭐ Recomendado</div>
+      <div class="pack-label">2 niños · 10 libros</div>
+      <div class="pack-name">Pack Familia</div>
+      <div class="pack-price"><sup>$</sup>499</div>
+      <div class="pack-per">2 niños · 5 libros cada uno</div>
+      <div class="pack-div"></div>
+      <ul class="pack-feats">
+        <li><span class="chk">✓</span>10 libros en total</li>
+        <li><span class="chk">✓</span>Personajes independientes</li>
+        <li><span class="chk">✓</span>Portada premium por serie</li>
+        <li><span class="chk">✓</span>Dedicatoria por niño</li>
+        <li><span class="chk">✓</span>Español + inglés</li>
+        <li><span class="chk">✓</span>Revisiones ilimitadas</li>
+        <li><span class="chk">✓</span>Entrega prioritaria 24 hrs</li>
+      </ul>
+      <a href="#contacto" class="pack-btn">Elegir</a>
+    </div>
+
+    <!-- Pack VIP -->
+    <div class="pack p4">
+      <div class="pack-badge">👑 VIP Colección</div>
+      <div class="pack-label">3 niños · experiencia total</div>
+      <div class="pack-name">Pack Colección</div>
+      <div class="pack-price"><sup>$</sup>799</div>
+      <div class="pack-per">3 niños · serie completa premium</div>
+      <div class="pack-div"></div>
+      <ul class="pack-feats">
+        <li><span class="chk">✓</span>15 libros (5 por niño)</li>
+        <li><span class="chk">✓</span>Diseño editorial de lujo</li>
+        <li><span class="chk">✓</span>Narración en audio</li>
+        <li><span class="chk">✓</span>Portada animada digital</span></li>
+        <li><span class="chk">✓</span>3 idiomas disponibles</li>
+        <li><span class="chk">✓</span>Revisiones urgentes ilimitadas</li>
+        <li><span class="chk">✓</span>Atención personalizada 1 a 1</li>
+        <li><span class="chk">✓</span>Entrega express 6 hrs</li>
+      </ul>
+      <a href="#contacto" class="pack-btn">Elegir VIP</a>
+    </div>
+
+  </div>
+
+  <div class="guarantee rv">
+    <span class="guarantee-icon">🛡️</span>
+    <div>
+      <h4>100% satisfacción garantizada</h4>
+      <p>Si el libro no cumple tus expectativas, lo reescribimos o te devolvemos tu dinero. Sin preguntas, sin complicaciones.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TESTIMONIO -->
+<div class="quote-bg">
+  <div class="quote-stars">★★★★★</div>
+  <p class="quote-text">"Mi hijo lloró de emoción cuando vio que el niño del cuento se llamaba igual que él y tenía su mismo cabello. Fue el regalo más especial que le hemos dado."</p>
+  <p class="quote-author">— Mamá de Sebastián, 5 años · Ciudad de México</p>
+</div>
+
+<!-- CTA -->
+<div class="cta-bg" id="contacto">
+  <div class="cta-inner">
+    <p class="cta-tag">Empieza hoy</p>
+    <h2 class="cta-h">Dale a tu hijo<br>su historia.</h2>
+    <p class="cta-sub">Escríbenos por WhatsApp y en menos de 24 horas tu pequeño tendrá su libro personalizado listo.</p>
+    <div class="cta-btns">
+      <a href="https://wa.me/521XXXXXXXXXX?text=Hola!%20Quiero%20el%20libro%20de%20mi%20hijo%20%F0%9F%93%96" class="btn-wa">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Escribir por WhatsApp
+      </a>
+      <span class="cta-note">· Respuesta en minutos ·</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-brand">Aventuras de Papel</div>
+  <div class="foot-right">Libros personalizados · Hecho con amor · México</div>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+});
+(function anim(){
+  rx+=(mx-rx)*.14;ry+=(my-ry)*.14;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(anim);
+})();
+document.querySelectorAll('a,button,.pack,.step,.inc-card,.page-thumb,.bv').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';ring.style.width='48px';ring.style.height='48px'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';ring.style.width='32px';ring.style.height='32px'});
+});
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')});
+},{threshold:.12});
+document.querySelectorAll('.rv,.rv-s').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
